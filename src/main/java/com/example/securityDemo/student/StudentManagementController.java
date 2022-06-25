@@ -31,19 +31,19 @@ public class StudentManagementController {
 
   @PostMapping
   public void addStudent(@RequestBody Student student) {
-    System.out.println("added" + student + "to fake database");
-    STUDENTS.add(new Student(student.getStudentId(), student.getStudentName()));
+    System.out.println("added " + student.toString() + " to fake database");
+
   }
 
 
   @DeleteMapping(path = "{studentId}")
-  public void deleteStudent(Integer studentId) {
-    System.out.println("deleted" + studentId);
+  public void deleteStudent(@PathVariable("studentId") Integer studentId) {
+    System.out.println("deleted " + studentId);
   }
 
   @PutMapping(path = "{studentId}")
-  public void updateStudent(Integer studentId, Student student){
-    System.out.println(String.format("%s %s", studentId, student));
+  public void updateStudent(@PathVariable("studentId") Integer studentId, @RequestBody Student student){
+    System.out.println(String.format("id: %s, name: %s", studentId, student.getStudentName()));
   }
 
 
