@@ -18,13 +18,13 @@ public class StudentManagementController {
   );
 
   @GetMapping
-  @PreAuthorize("hasAnyRole(ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')")
   public List<Student> getAllStudents() {
     return STUDENTS;
   }
 
   @GetMapping(path = "{studentId}")
-  @PreAuthorize("hasAnyRole(ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')")
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ADMIN_TRAINEE')")
   public Student getStudentById(@PathVariable("studentId") Integer studentId) {
     return STUDENTS
         .stream()
