@@ -13,4 +13,11 @@ public class TemplateController {
     return "login";
 
   }
+
+  @GetMapping
+  public String getCoursesView() {
+    return "courses";
+
+  }
+
 }
