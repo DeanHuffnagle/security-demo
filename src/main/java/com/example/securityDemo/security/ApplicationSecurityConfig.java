@@ -54,7 +54,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         .key("somethingsupersecure")
         .and()
         .logout()
-        .logoutUrl("/logpout")
+        .logoutUrl("/logout")
         .clearAuthentication(true)
         .invalidateHttpSession(true)
         .deleteCookies("JSESSIONID", "remember-me")
