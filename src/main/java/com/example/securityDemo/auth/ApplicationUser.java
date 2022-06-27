@@ -8,17 +8,18 @@ import java.util.List;
 
 public class ApplicationUser implements UserDetails {
 
-  private final List<? extends GrantedAuthority> grantedtAuthorities;
   private final String username;
   private final String password;
+  private final List<? extends GrantedAuthority> grantedtAuthorities;
   private final boolean isAccountNonExpired;
   private final boolean isAccountNonLocked;
   private final boolean isCredentialsNonExpired;
   private final boolean isEnabled;
 
 
-  public ApplicationUser(List<? extends GrantedAuthority> grantedtAuthorities,
-                         String username, String password,
+  public ApplicationUser(String username,
+                         String password,
+                         List<? extends GrantedAuthority> grantedtAuthorities,
                          boolean isAccountNonExpired,
                          boolean isAccountNonLocked,
                          boolean isCredentialsNonExpired,
