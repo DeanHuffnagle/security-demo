@@ -1,6 +1,8 @@
 package com.example.securityDemo.security;
 
 import com.example.securityDemo.auth.ApplicationUserService;
+import com.example.securityDemo.jwt.JwtConfig;
+import com.example.securityDemo.jwt.JwtTokenVerifier;
 import com.example.securityDemo.jwt.JwtUsernameAndPasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.concurrent.TimeUnit;
-
 import static com.example.securityDemo.security.ApplicationUserRole.*;
 
 @Configuration
@@ -26,11 +26,13 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final PasswordEncoder passwordEncoder;
   private final ApplicationUserService applicationUserService;
+  private final JwtConfig jwtConfig;
 
   @Autowired
-  public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, ApplicationUserService applicationUserService) {
+  public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService, ApplicationUserService applicationUserService, JwtConfig jwtConfig) {
     this.passwordEncoder = passwordEncoder;
     this.applicationUserService = applicationUserService;
+    this.jwtConfig = jwtConfig;
   }
 
   @Override
@@ -40,7 +42,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         .disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
+        .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))
+        .addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
         .authorizeRequests()
         .antMatchers("/", "index", "/css/*", "/js/*")
         .permitAll()

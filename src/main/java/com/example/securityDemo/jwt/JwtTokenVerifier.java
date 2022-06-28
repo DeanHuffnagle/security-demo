@@ -24,6 +24,13 @@ import java.util.stream.Collectors;
 
 public class JwtTokenVerifier extends OncePerRequestFilter {
 
+  private final JwtConfig jwtConfig;
+
+  public JwtTokenVerifier(JwtConfig jwtConfig) {
+    this.jwtConfig = jwtConfig;
+  }
+
+
   @Override
   protected void doFilterInternal(HttpServletRequest request,
                                   HttpServletResponse response,
@@ -33,11 +40,11 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
       filterChain.doFilter(request, response);
       return;
     }
-    String token = authorizationHeader.replace("Bearer ", "");
+    String token = authorizationHeader.replace(jwtConfig.getTokenPrefix(), "");
     try {
       Jws<Claims> claimsJws = Jwts
           .parserBuilder()
-          .setSigningKey(SecretKey.getKey())
+          .setSigningKey(jwtConfig.getSecretKey())
           .build()
           .parseClaimsJws(token);
       Claims body = claimsJws.getBody();
@@ -56,10 +63,10 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
+
     } catch (JwtException e){
       throw new IllegalStateException(String.format("Token %s can not be trusted", token));
     }
-
-
+    filterChain.doFilter(request,response);
   }
 }
